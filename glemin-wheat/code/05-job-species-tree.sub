@@ -1,0 +1,26 @@
+# HTC Submit File
+
+# Name the batch job
+batch_name = "species-tree" 
+
+# Provide HTCondor with the name of the Docker container
+container_image = docker://amkozlov/raxml-ng:2.0.0
+universe = container
+
+executable = species-tree-job.sh
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = /home/pratt7/pp875/glemin-wheat/data/Wheat_Relative_History_Data_Glemin_et_al/triticeae_allindividuals_OneCopyGenes.fasta
+
+log = logs/job_species_tree.log
+error = logs/job_species_tree.err
+output = logs/job_species_tree.out
+
+request_cpus = 8
+request_memory = 10GB
+request_disk = 20GB
+
+retry_request_memory_increase = RequestMemory * N
+retry_request_memory_max = 500GB
+
+queue
