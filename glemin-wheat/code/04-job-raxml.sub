@@ -1,0 +1,29 @@
+# HTC Submit File
+
+# Name the batch job
+batch_name = "raxml" 
+
+# Provide HTCondor with the name of the Docker container
+container_image = docker://amkozlov/raxml-ng:2.0.0
+universe = container
+
+arguments = "$(subset)"
+
+executable = raxml-job.sh
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = /home/pratt7/pp875/glemin-wheat/data/Wheat_Relative_History_Data_Glemin_et_al/OneCopyGenes_$(subset)
+transfer_output_files = RAxML_results_$(subset)
+
+log = logs/job_$(subset)_raxml.log
+error = logs/job_$(subset)_raxml.err
+output = logs/job_$(subset)_raxml.out
+
+request_cpus = 8
+request_memory = 10GB
+request_disk = 20GB
+
+retry_request_memory_increase = RequestMemory * N
+retry_request_memory_max = 500GB
+
+queue subset from 04-raxml-parameters.txt
