@@ -1,0 +1,8 @@
+library(ape)
+
+setwd("../results/")
+
+tre = read.tree(file="07-species-tree-astral4.tre")
+plot(tre)
+rtre = root(tre,outgroup="H_vulgare", resolve.root=TRUE)
+plot(rtre)
