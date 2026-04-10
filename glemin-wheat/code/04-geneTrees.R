@@ -3,6 +3,8 @@ library(phangorn)
 library(phytools)
 library(ggplot2)
 
+pdf("../figures/04-geneTrees.pdf") # set the graphics device for all plots
+
 setwd("../results/RAxML") #replace PathTo with the correct path and run if not in the correct folder
 
 tree_files <-list.files(pattern="\\.raxml.bestTree$") #List all .bestTree files. $ ensures the end of the name
@@ -17,7 +19,7 @@ for(tree_file in tree_files){ ##go thru each file and read the tree
 }
 
 # save the list of gene trees for future analysis
-write.tree(gene_trees, file="../results/04-all_gene_trees.tre")
+write.tree(gene_trees, file="../04-all_gene_trees.tre")
 
 #Find the appropriate root taxon
 root_taxa <- c("H_vulgare_HVens23", "Er_bonaepartis_TB1", "S_vavilovii_Tr279", "Ta_caputMedusae_TB2")
@@ -82,3 +84,5 @@ densityTree(rtrees,type="cladogram",nodes="intermediate")
 
 densityTree(trees,use.edge.length=FALSE,type="cladogram",nodes="centered")
 densityTree(rtrees,use.edge.length=FALSE,type="cladogram",nodes="centered")
+
+dev.off() # close the graphics device - the 04-geneTrees.pdf file
