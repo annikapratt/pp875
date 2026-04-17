@@ -1,21 +1,20 @@
-from pathlib import Path
-from Bio import SeqIO
+from Bio import AlignIO
+from Bio.AlignIO.PhylipIO import SequentialPhylipWriter
 
-# input and output directories
-in_dir = Path("../data/Wheat_Relative_History_Data_Glemin_et_al/Concatenation10Mb_OneCopyGenes")
-out_dir = Path("../results/10concatenation10Mb_OneCopy-phylip")
-out_dir.mkdir(parents=True, exist_ok=True)
+data_path = "../data/Wheat_Relative_History_Data_Glemin_et_al/"
+concat_file = "triticeae_allindividuals_OneCopyGenes.fasta"
 
-# loop over FASTA files
-for fasta_file in in_dir.glob("*.fasta"):
-    # output file name: same stem, new extension
-    phylip_file = out_dir / (fasta_file.stem + ".phy")
+fasta_file = data_path+concat_file
+phylip_file = "../results/10-triticeae_allindividuals_OneCopyGenes.phylip"
 
-    records = list(SeqIO.parse(fasta_file, "fasta"))
+# Load the alignment
+with open(fasta_file, "r") as f_in:
+    alignment = AlignIO.read(f_in, "fasta")
 
-    if len(records) == 0:
-        print(f"Skipping {fasta_file.name}: no sequences found")
-        continue
+# Find the length of the longest sequence ID to prevent truncation
+max_id_len = max(len(record.id) for record in alignment)
 
-    SeqIO.write(records, phylip_file, "phylip-relaxed")
-    print(f"Converted {fasta_file.name} → {phylip_file.name}")
+# Write out the alignment
+with open(phylip_file, "w") as f_out:
+    writer = SequentialPhylipWriter(f_out)
+    writer.write_alignment(alignment, id_width=max_id_len + 3) # 3 additional padding

@@ -1,0 +1,23 @@
+# HTC Submit File
+
+# Name the batch job
+batch_name = "HyDe windows" 
+
+executable = hyde-10Mb-windows.sh
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = ../results/10concatenation10Mb_OneCopy-phylip-ch3, ../results/07-species_mapping.txt
+transfer_output_files = HyDe
+
+log = logs/job_hyde_windows.log
+error = logs/job_hyde_windows.err
+output = logs/job_hyde_windows.out
+
+request_cpus = 8
+request_memory = 10GB
+request_disk = 20GB
+
+retry_request_memory_increase = RequestMemory * N
+retry_request_memory_max = 500GB
+
+queue
