@@ -11,7 +11,7 @@ executable = snaq.sh
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
 transfer_input_files = /home/pratt7/pp875/glemin-wheat/results/09-tableCF_species.csv, /home/pratt7/pp875/glemin-wheat/results/07-species-tree-astral4.tre, snaq.jl
-transfer_output_files = 09-snaq-h1/
+transfer_output_files = 09-snaq-h1.log, 09-snaq-h1.networks, 09-snaq-h1.out, 09-snaq-h1_runs/, 09-tableCF_species.csv
 
 log = logs/job_snaq.log
 error = logs/job_snaq.err
