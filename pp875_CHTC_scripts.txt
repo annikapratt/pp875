@@ -1,0 +1,706 @@
+---
+title: "PP875 CHTC Scripts"
+author: "Annika Pratt"
+format: html
+editor: visual
+execute: 
+  enabled: false
+---
+
+This document is a step-by-step account of the analyses ran in PP875 in Spring of 2026 at the University of Wisconsin-Madison. The goal of this course is to have hands-on experience conducting a phylogenetic analysis by reproducing the analysis from [this paper](https://www.science.org/doi/10.1126/sciadv.aav9188).
+
+Here is the class website for reference: [PlantPath 875](https://solislemuslab.github.io/phylo-practicum/)
+
+Here is the class GitHub repository for reference: [PP875 GitHub](https://github.com/solislemuslab/phylo-practicum)
+
+All scripts referenced in this document are available on [my GitHub repository](https://github.com/annikapratt/pp875)
+
+## 03 Data and Software Setup
+
+### Miniconda installation
+
+Working with software on the CHTC can be a bit of a headache, but conda makes this process much less painful. The first step of this analysis is to install miniconda3 on the CHTC. I followed Option B of [this tutorial](https://chtc.cs.wisc.edu/uw-research-computing/conda-installation) to learn how to install miniconda - see the commands below.
+
+```{bash}
+# type these in the terminal when you are connected to the CHTC and in your home directory
+# download a bash script that will run the installation process
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+# run the script that you just downloaded to install miniconda3
+sh Miniconda3-latest-Linux-x86_64.sh
+```
+
+After running that last command, I accepted all default options, which activated the base conda environment. I know the base environment is active because before my username and promt it says (base).
+
+### Git installation
+
+Git is version control software that helps us keep track of file changes and easily revert back to old versions if our code breaks.
+
+```{bash}
+# in my home directory on the CHTC with the base conda environment active
+# install git in the base conda environment
+conda install -c conda-forge git
+
+# check to make sure it is installed and see the version
+git --version
+
+# configure git repository
+git config --global user.name "Annika Pratt"
+git config --global user.email "pratt7@wisc.edu"
+git config --global core.editor "nano"
+git config --global init.defaultBranch main
+
+git config --global --list # see all the configuration settings
+```
+
+### Creating a git repository
+
+Now that git is properly installed and configured on the CHTC, it is time to make a git repository. Software Carpentries has a really great lesson for [getting started with git](https://swcarpentry.github.io/git-novice/03-create.html). I refer back to this whenever I forget a command or need to re-initialize git on a new machine.
+
+```{bash}
+# make a new directory on the CHTC
+mkdir pp875
+
+# tell git to start tracking that folder
+git init
+
+# run this command to see when something needs to be added, committed, or pushed
+git status
+
+git add # tells git to start tracking the file(s)
+git commit # actually records the changes
+git push # sends those changes to GitHub (they are no longer locally on one machine)
+```
+
+Next we want our local git repo to communicate with github. First step is to create a github account. Then click Repositories \> New to create a new repository named pp875. To connect this repository with my local repo, I clicked the green 'code' button and copied the URL that shows up there. Next, I went back to my CHTC terminal:
+
+```{bash}
+# this is letting the two repositories (GitHub and CHTC) connect
+# The URL here is what I copied from GitHub
+git remote add origin https://github.com/annikapratt/pp875.git
+
+# I tested if this worked by creating a file
+touch file.txt
+
+# checking the status, adding, committing, and pushing the update
+# after running the commands below I checked GitHub and saw that the file appeared there
+git status 
+git add file.txt
+git commit -m "adding a file to test git connection"
+git push
+```
+
+The last setup step is to copy the class .gitignore into our git repository. To do this, I just when to the github, copied the text of the .gitignore, and pasted it into a new text file called .gitignore in my pp875 directory on the CHTC. The gitignore is essential for telling git what not to track (typically things that will not change - data, software, etc.).
+
+### Data Download
+
+The class repository has all the scripts we need to run this analysis.
+
+```{bash}
+# clone class repository
+git clone https://github.com/solislemuslab/phylo-practicum
+
+# I don't want a git reposiory in a git repository
+# move the glemin-wheat folder to the pp875 dir
+mv phylo-practicum/glemin-wheat ./
+
+# remove the phylo-practicum dir
+rm -r phylo-practicum
+
+# add and commit glemin-wheat files to git repo
+git add glemin-wheat
+git commit -m "added glemin-wheat files"
+```
+
+The authors of the paper made the data available [here](https://www.agap-ge2pop.org/wheat-relative-history/). I downloaded the data and unzipped it in the data folder
+
+```{bash}
+# move in to the data folder
+cd glemin-wheat/data
+
+# download the data
+wget https://www.agap-ge2pop.org/wp-content/uploads/WheatRelativeHistory/download/Wheat_Relative_History_Data_Glemin_et_al.zip
+
+# unzip the data
+unzip Wheat_Relative_History_Data_Glemin_et_al.zip
+
+# now you should have the data in your data folder 
+# if you check git status these files should not be tracked
+```
+
+### Software Installation
+
+I want to create one conda environment with as many tools as I can for this class.
+
+```{bash}
+# create a new conda environment called pp875
+conda create -n pp875
+
+# activate that environment
+# I know it's active because (base) becomes (pp875)
+conda activate pp875
+```
+
+#### RAxML Next Generation
+
+```{bash}
+# install raxml
+conda install raxml-ng
+
+# make sure it worked
+raxml-ng
+
+# RAxML-NG v. 2.0.0 released on 11.03.2026 by The Exelixis Lab.
+# Developed by: Oleksiy M. Kozlov and Alexandros Stamatakis.
+# Contributors: Diego Darriba, Tomas Flouri, Benoit Morel, Sarah Lutteropp, Ben Bettisworth,
+#               Julia Haag, Anastasis Togkousidis, Julius Wiegert, Christoph Stelz.
+# Latest version: https://github.com/amkozlov/raxml-ng
+# Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!forum/raxml
+```
+
+#### SuperTriplets
+
+```{bash}
+# download the jar file in a software folder
+wget https://www.agap-ge2pop.org/wp-content/uploads/ge2pop/superTriplets/data/SuperTriplets_v1.1.jar
+```
+
+#### ASTRAL
+
+```{bash}
+# in pp875 conda env
+conda install aster
+```
+
+#### Julia
+
+```{bash}
+# in pp875 conda env
+curl -fsSL https://install.julialang.org | sh
+
+# close and reopen terminal
+juliaup add release
+
+# install packages
+import Pkg; Pkg.add("PhyloNetworks")
+import Pkg; Pkg.add("SNaQ")
+import Pkg; Pkg.add("PhyloPlots")
+import Pkg; Pkg.add("CSV")
+import Pkg; Pkg.add("DataFrames")
+```
+
+#### HyDe
+
+```{bash}
+# in your software direcotry
+git clone https://github.com/pblischak/HyDe.git
+cd HyDe
+python3 -m pip install -r requirements.txt
+python3 -m pip install .
+```
+
+#### R
+
+```{bash}
+# install the R conda environment in your pp875 env
+conda install -c conda-forge r-base
+conda install r-ape r-ggplot2 r-phangorn r-phytools
+mamba install -c conda-forge -c bioconda \
+  r-base>=4.3 bioconductor-ggtree>=3.10
+```
+
+#### MSCquartets
+
+```{bash}
+# activate conda environment
+conda activate pp875
+
+# start R
+R
+
+# install MSCquartets
+BiocManager::install("MSCquartets")
+
+# quit R
+q()
+```
+
+## 04 Gene Tree Estimation
+
+The data started with 13,288 genes which were filtered down to the 8,739 we are using here. We are using raxml to estimate gene trees based on those 8,739 alignments. Before running the whole thing, I tested the command on just 10 genes to make sure it all works.
+
+```{bash}
+# this is in the data/Wheat_Relative_History_Data_Glemin_et_al directory
+
+# unzip IndividualAlignments_OneCopyGenes.zip
+unzip IndividualAlignments_OneCopyGenes.zip
+
+# make a subfolder for the smaller dataset
+mkdir OneCopyGenes-trimmed
+
+# move to OneCopyGenes
+cd OneCopyGenes
+
+# copy 10 genes to the trimmed folder
+ls | head -n10 | xargs -I {} cp "{}" ../OneCopyGenes-trimmed
+```
+
+The subfolder now contains the first 10 alignments
+
+```{bash}
+# move to the code folder to run the raxml script
+cd ../../code
+./04-raxml.sh
+```
+
+We can see the results for each gene in the results/RAxML folder. Running 10 genes in the terminal wasn't bad, but to run the whole dataset we'll want to break the dataset into several chunks and submit jobs.
+
+```{bash}
+# move into your data/Wheat_Relative_History_Data_Glemin_et_al folder
+
+num_dirs=20
+
+# Create destination directories
+for i in $(seq 1 $num_dirs); do
+    mkdir -p "OneCopyGenes_$i"
+done
+
+# Copy files evenly
+i=1
+for file in OneCopyGenes/*; do
+    cp "$file" "OneCopyGenes_$i/"
+    i=$(( (i % num_dirs) + 1 ))
+done
+```
+
+```{bash}
+# run the 20 jobs
+# docker container is raxml-ng version 2.0.0
+condor_submit 04-job-raxml.sub
+```
+
+The results ended up in 20 separate folders in the code folder, so we have to move these folders to the results/RAxML folder
+
+```{bash}
+mv RAxML_results_* ../results
+cd ../results
+
+# move all results to the RAxML folder
+for folder in RAxML_results_*; do
+  mv $folder/* RAxML/
+done
+
+# remove empty folders
+rmdir RAxML_results*
+```
+
+### Analyze the Results
+
+TODO: add more comments to this script and save plots using ggsave. It takes a long time to run, so maybe make it a job?
+
+```{bash}
+Rscript 04-geneTrees.R
+```
+
+## 05 Full Species Tree Supermatrix
+
+```{bash}
+# in the data folder
+# unzip the concatenated fasta file
+unzip FullConcatenation_OneCopyGenes.zip
+
+# run raxml on the full concatenation
+condor_submit 05-job-species-tree.sub
+
+# once job is done running, move outputs to the results folder
+cd ../../results/RAxML/
+mkdir full-concatenation
+
+# move back into the code dir where the results are
+cd ../../code
+ls ## to check files are there
+
+# move the files to results/full-concatenation
+mv triticeae_allindividuals_OneCopyGenes.fasta.raxml.* ../results/RAxML/full-concatenation/
+```
+
+```{bash}
+# analyze results
+Rscript 05-species-tree.R
+```
+
+## 06 10Mb Species Tree Supermatrix
+
+```{bash}
+# in the data folder
+# unzip the folder
+unzip Concatenation10Mb_OneCopyGenes.zip
+
+# move into that folder
+cd Concatenation10Mb_OneCopyGenes
+
+# check how many files there are
+ls | wc -l # 248 files
+```
+
+We want to build one species tree per file. This would take about 10 hours if we run each individually, so we will break the files into 8 batches and run in parallel.
+
+```{bash}
+num_dirs=8
+
+# Create destination directories
+for i in $(seq 1 $num_dirs); do
+    mkdir -p "Concatenation10Mb_subset_$i"
+done
+
+# Copy files evenly
+i=1
+for file in Concatenation10Mb_OneCopyGenes/*; do
+    cp "$file" "Concatenation10Mb_subset_$i/"
+    i=$(( (i % num_dirs) + 1 ))
+done
+```
+
+```{bash}
+condor_submit 06-job-raxml-concatenation.sub
+```
+
+```{bash}
+# make results folder and move results
+# in results/RAxML
+mkdir 10Mb-concatenation
+cd ../../code
+
+mv concatenation_results_? ../results/RAxML/10Mb-concatenation/
+cd ../../results/RAxML/10Mb-concatenation
+ls # to make sure the folders are there
+
+for folder in concatenation_results_? 
+do
+  mv $folder/*raxml* .
+done
+```
+
+Analyze the results
+
+```{bash}
+Rscript 06-concatenation.R
+```
+
+## 07 Species Tree Supertree/Coaslescent
+
+```{bash}
+# run this from the results directory
+# Supertree requires java, which works in my base conda env but not the pp875 env
+# run this with base conda env
+java -jar ~/software/SuperTriplets_v1.1.jar 04-all_gene_trees.tre 07-supertree.tre
+```
+
+Analyze the supertree results
+
+```{bash}
+# reactivate the pp875 conda environment to run this
+conda activate pp875
+
+Rscript 07-supertree.R
+```
+
+```{bash}
+# run this in the results folder
+astral4 -i 04-all_gene_trees.tre -o 07-individual-species-tree-astral4.tre -t 8
+```
+
+```{bash}
+Rscript 07-astral.R
+```
+
+```{bash}
+# run this in the results folder
+astral4 -i 04-all_gene_trees.tre -a 07-species_mapping.txt -o 07-species-tree-astral4.tre -t 8
+```
+
+## 08 Species Tree Visualizations
+
+We now have 4 species trees in the results folder
+
+-   full concatenation (RAxML/full-concatenation/triticeae_allindividuals_OneCopyGenes.fasta.raxml.bestTree)
+
+-   consensus of 10Mb window concatenation trees (folder RAxML/10Mb-concatenation)
+
+-   supertree (07-supertree.tre)
+
+-   ASTRAL4 (07-individual-species-tree-astral4.tre)
+
+## 09 Species Network
+
+```{bash}
+# make sure the pp875 conda env is active
+# open julia
+julia
+
+# define which packages you will use
+using PhyloNetworks
+using SNaQ
+using CSV, DataFrames
+
+mappingfile = CSV.read("../results/07-species_mapping.txt", DataFrame; header=false, delim=' ')
+
+```
+
+```{bash}
+rename!(mappingfile, :Column1 => :individual)
+rename!(mappingfile, :Column2 => :species)
+
+select!(mappingfile,[:species, :individual])
+
+## We want to remove 3 of the 4 outgroups to simplify the analysis:
+## We keep `H_vulgare_HVens23`, 
+## We remove `Ta_caputMedusae_TB2`, `Er_bonaepartis_TB1`, `S_vavilovii_Tr279`
+filter(row -> row.species in ["Ta_caputMedusae", "Er_bonaepartis", "S_vavilovii"], mappingfile)
+size(mappingfile) ## (47,2)
+
+mappingfile = filter(row -> !(row.species in ["Ta_caputMedusae", "Er_bonaepartis", "S_vavilovii"]), mappingfile)
+size(mappingfile) ## (44, 2)
+
+CSV.write("../results/09-species_mapping.csv", mappingfile)
+
+## mappingfile = CSV.read("../results/09-species_mapping.csv", DataFrame)
+taxonmap = Dict(r[:individual] => r[:species] for r in eachrow(mappingfile)) # as dictionary
+
+```
+
+```{bash}
+trees = readmultinewick("../results/04-all_gene_trees.tre")
+length(trees) ## 8708
+
+
+for gt in trees
+  for badtip in ["Ta_caputMedusae_TB2", "Er_bonaepartis_TB1", "S_vavilovii_Tr279"]
+    if badtip in tiplabels(gt)
+      deleteleaf!(gt, badtip)
+    end
+  end
+end
+
+
+writemultinewick(trees, "../results/09-all_gene_trees_snaq.tre")
+
+## trees = readmultinewick("../results/09-all_gene_trees_snaq.tre")
+
+## creating CF table:
+df_sp = tablequartetCF(countquartetsintrees(trees, taxonmap; showprogressbar=false)...);
+keys(df_sp)  # columns names
+CSV.write("../results/09-tableCF_species.csv", df_sp); 
+
+# close julia
+exit()
+```
+
+```{bash}
+# 09-snaq.sub
+# HTC Submit File
+
+# Name the batch job
+batch_name = "snaq" 
+
+# Provide HTCondor with the name of the Docker container
+container_image = docker://julia:trixie
+universe = container
+
+executable = snaq.sh
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = /home/pratt7/pp875/glemin-wheat/results/09-tableCF_species.csv, /home/pratt7/pp875/glemin-wheat/results/07-species-tree-astral4.tre, snaq.jl
+transfer_output_files = 09-snaq-h1.log, 09-snaq-h1.networks, 09-snaq-h1.out, 09-snaq-h1_runs
+
+log = logs/job_snaq.log
+error = logs/job_snaq.err
+output = logs/job_snaq.out
+
+request_cpus = 8
+request_memory = 10GB
+request_disk = 20GB
+
+retry_request_memory_increase = RequestMemory * N
+retry_request_memory_max = 500GB
+
+queue
+```
+
+```{bash}
+# snaq.sh
+# !/bin/bash
+
+set -x
+
+julia snaq.jl
+
+ls -lh
+
+ls -lh 09-snaq-h1_runs
+```
+
+```{bash}
+# snaq.jl
+# you should really create a container that has the packages you need... but this way works too if you are being lazy like me
+
+# add the packages you need
+import Pkg; Pkg.add("PhyloNetworks")
+import Pkg; Pkg.add("SNaQ")
+
+# and now inside Julia
+using Distributed
+addprocs(4)
+
+@everywhere using PhyloNetworks
+@everywhere using SNaQ
+
+## read table of CF
+d_sp = readtableCF("09-tableCF_species.csv"); # "DataCF" object for use in snaq!
+#read in the species tree from ASTRAL as a starting point
+T_sp = readnewick("07-species-tree-astral4.tre")
+
+# starting tree
+# data w/ concordance factor
+# number of parallel searches
+# number of times to test neighbors
+# output file
+# seed stops
+net = snaq!(T_sp, d_sp, runs=100, Nfail=200, filename= "09-snaq-h1",seed=8485);
+```
+
+```{bash}
+# move results to the results folder
+mv run* ../results/snaq/09-snaq-h1_runs
+mv 09-snaq-h1* ../results/snaq/
+```
+
+```{bash}
+## This is if you aren't running a job!
+# restart Julia with more threads
+julia -t 8
+
+# and now inside Julia
+using Distributed
+addprocs(4)
+
+@everywhere using PhyloNetworks
+@everywhere using SNaQ
+
+## read table of CF
+d_sp = readtableCF("../results/09-tableCF_species.csv"); # "DataCF" object for use in snaq!
+#read in the species tree from ASTRAL as a starting point
+T_sp = readnewick("../results/07-species-tree-astral4.tre")
+
+# create snaq folder in results before running this
+# make this into a submit file
+# starting tree
+# data w/ concordance factor
+# number of parallel searches
+# number of times to test neighbors
+# output file
+# seed stops
+net = snaq!(T_sp, d_sp, runs=100, Nfail=200, filename= "../results/snaq/09-snaq-h1",seed=8485);
+
+```
+
+## 10 Hybrid Detection with HyDe
+
+```{bash}
+# make sure you are in the glemin-wheat/code directory
+# make sure the pp875 conda environment is active
+# install biopython
+conda install -c conda-forge biopython
+```
+
+```{python}
+# 10-fasta2phylip.py 
+
+from Bio import AlignIO
+from Bio.AlignIO.PhylipIO import SequentialPhylipWriter
+
+data_path = "../data/Wheat_Relative_History_Data_Glemin_et_al/"
+concat_file = "triticeae_allindividuals_OneCopyGenes.fasta"
+
+fasta_file = data_path+concat_file
+phylip_file = "../results/10-triticeae_allindividuals_OneCopyGenes.phylip"
+
+# Load the alignment
+with open(fasta_file, "r") as f_in:
+    alignment = AlignIO.read(f_in, "fasta")
+
+# Find the length of the longest sequence ID to prevent truncation
+max_id_len = max(len(record.id) for record in alignment)
+
+# Write out the alignment
+with open(phylip_file, "w") as f_out:
+    writer = SequentialPhylipWriter(f_out)
+    writer.write_alignment(alignment, id_width=max_id_len + 3) # 3 additional padding
+```
+
+```{bash}
+# convert fasta to phylip with script above
+python 10-fasta2phylip.py 
+```
+
+```{bash}
+# run HyDe on the full concatenation
+# this takes a bit, would be nice as a job
+# started at 9 am - done at 10:30 am
+run_hyde.py -i ../results/10-triticeae_allindividuals_OneCopyGenes.phylip -m ../results/07-species_mapping.txt -o H_vulgare -n 47 -t 17 -s 11354214 --prefix 10-hyde
+```
+
+```{bash}
+# move the results to the results folder
+mv 10-hyde-out-filtered.txt ../results
+mv 10-hyde-out.txt ../results
+```
+
+There are .sub and .sh files on GitHub (10-hyde.sub and hyde.sh) if you want to run this as a job instead of waiting 90 minutes for it to run in terminal
+
+### Running HyDe on 10Mb windows
+
+```{bash}
+# convert windows to the appropriate format
+# in the glemin-wheat/code folder
+python 10-fasta2phylip_10Mb_windows.py
+
+# change to the results folder
+cd ../results
+
+# make a new directory for the 10Mb window HyDe results
+mkdir 10concatenation10Mb_OneCopy-phylip-ch3
+
+# we're just going to run this analysis on chromosome 3 because the whole thing would be very time-cnsuming and this is all we need for figure 3b
+mv 10concatenation10Mb_OneCopy-phylip/*Chrom_3* 10concatenation10Mb_OneCopy-phylip-ch3
+
+# run the script below if you want to run in terminal instead of submitting a job
+# 10-hyde-10mb.sh
+```
+
+```{bash}
+# run on the CHTC (the scripts are on github)
+condor_submit 10-hyde-10Mb-windows.sub
+
+# move into the folder where the results were outputted
+cd HyDe/10Mb-concatenation-ch3
+
+# move the results to the results dir
+mv * ../../../results/HyDe/10Mb-concatenation-ch3/
+```
+
+## 11 Hybrid Detection MSCQuartets
+
+### Figures 3A and 3B
+
+```{bash}
+# make sure to have a conda env with R active
+Rscript 11-figs3A-3B.R
+```
+
+### MCQuartets
+
+```{bash}
+# run MSCquartets
+11-quartets.R
+```
