@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Annika Pratt">
+
+<title>PP875 CHTC Scripts</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="pp875_CHTC_scripts_files/libs/clipboard/clipboard.min.js"></script>
+<script src="pp875_CHTC_scripts_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="pp875_CHTC_scripts_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="pp875_CHTC_scripts_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="pp875_CHTC_scripts_files/libs/quarto-html/popper.min.js"></script>
+<script src="pp875_CHTC_scripts_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="pp875_CHTC_scripts_files/libs/quarto-html/anchor.min.js"></script>
+<link href="pp875_CHTC_scripts_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="pp875_CHTC_scripts_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="pp875_CHTC_scripts_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="pp875_CHTC_scripts_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="pp875_CHTC_scripts_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">PP875 CHTC Scripts</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Annika Pratt </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This document is a step-by-step account of the analyses ran in PP875 in Spring of 2026 at the University of Wisconsin-Madison. The goal of this course is to have hands-on experience conducting a phylogenetic analysis by reproducing the analysis from <a href="https://www.science.org/doi/10.1126/sciadv.aav9188">this paper</a>.</p>
+<p>Here is the class website for reference: <a href="https://solislemuslab.github.io/phylo-practicum/">PlantPath 875</a></p>
+<p>Here is the class GitHub repository for reference: <a href="https://github.com/solislemuslab/phylo-practicum">PP875 GitHub</a></p>
+<p>All scripts referenced in this document are available on <a href="https://github.com/annikapratt/pp875">my GitHub repository</a></p>
+<section id="data-and-software-setup" class="level2">
+<h2 class="anchored" data-anchor-id="data-and-software-setup">03 Data and Software Setup</h2>
+<section id="miniconda-installation" class="level3">
+<h3 class="anchored" data-anchor-id="miniconda-installation">Miniconda installation</h3>
+<p>Working with software on the CHTC can be a bit of a headache, but conda makes this process much less painful. The first step of this analysis is to install miniconda3 on the CHTC. I followed Option B of <a href="https://chtc.cs.wisc.edu/uw-research-computing/conda-installation">this tutorial</a> to learn how to install miniconda - see the commands below.</p>
+<pre class="{bash}"><code># type these in the terminal when you are connected to the CHTC and in your home directory
+# download a bash script that will run the installation process
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+# run the script that you just downloaded to install miniconda3
+sh Miniconda3-latest-Linux-x86_64.sh</code></pre>
+<p>After running that last command, I accepted all default options, which activated the base conda environment. I know the base environment is active because before my username and promt it says (base).</p>
+</section>
+<section id="git-installation" class="level3">
+<h3 class="anchored" data-anchor-id="git-installation">Git installation</h3>
+<p>Git is version control software that helps us keep track of file changes and easily revert back to old versions if our code breaks.</p>
+<pre class="{bash}"><code># in my home directory on the CHTC with the base conda environment active
+# install git in the base conda environment
+conda install -c conda-forge git
+
+# check to make sure it is installed and see the version
+git --version
+
+# configure git repository
+git config --global user.name "Annika Pratt"
+git config --global user.email "pratt7@wisc.edu"
+git config --global core.editor "nano"
+git config --global init.defaultBranch main
+
+git config --global --list # see all the configuration settings</code></pre>
+</section>
+<section id="creating-a-git-repository" class="level3">
+<h3 class="anchored" data-anchor-id="creating-a-git-repository">Creating a git repository</h3>
+<p>Now that git is properly installed and configured on the CHTC, it is time to make a git repository. Software Carpentries has a really great lesson for <a href="https://swcarpentry.github.io/git-novice/03-create.html">getting started with git</a>. I refer back to this whenever I forget a command or need to re-initialize git on a new machine.</p>
+<pre class="{bash}"><code># make a new directory on the CHTC
+mkdir pp875
+
+# tell git to start tracking that folder
+git init
+
+# run this command to see when something needs to be added, committed, or pushed
+git status
+
+git add # tells git to start tracking the file(s)
+git commit # actually records the changes
+git push # sends those changes to GitHub (they are no longer locally on one machine)</code></pre>
+<p>Next we want our local git repo to communicate with github. First step is to create a github account. Then click Repositories &gt; New to create a new repository named pp875. To connect this repository with my local repo, I clicked the green ‘code’ button and copied the URL that shows up there. Next, I went back to my CHTC terminal:</p>
+<pre class="{bash}"><code># this is letting the two repositories (GitHub and CHTC) connect
+# The URL here is what I copied from GitHub
+git remote add origin https://github.com/annikapratt/pp875.git
+
+# I tested if this worked by creating a file
+touch file.txt
+
+# checking the status, adding, committing, and pushing the update
+# after running the commands below I checked GitHub and saw that the file appeared there
+git status 
+git add file.txt
+git commit -m "adding a file to test git connection"
+git push</code></pre>
+<p>The last setup step is to copy the class .gitignore into our git repository. To do this, I just when to the github, copied the text of the .gitignore, and pasted it into a new text file called .gitignore in my pp875 directory on the CHTC. The gitignore is essential for telling git what not to track (typically things that will not change - data, software, etc.).</p>
+</section>
+<section id="data-download" class="level3">
+<h3 class="anchored" data-anchor-id="data-download">Data Download</h3>
+<p>The class repository has all the scripts we need to run this analysis.</p>
+<pre class="{bash}"><code># clone class repository
+git clone https://github.com/solislemuslab/phylo-practicum
+
+# I don't want a git reposiory in a git repository
+# move the glemin-wheat folder to the pp875 dir
+mv phylo-practicum/glemin-wheat ./
+
+# remove the phylo-practicum dir
+rm -r phylo-practicum
+
+# add and commit glemin-wheat files to git repo
+git add glemin-wheat
+git commit -m "added glemin-wheat files"</code></pre>
+<p>The authors of the paper made the data available <a href="https://www.agap-ge2pop.org/wheat-relative-history/">here</a>. I downloaded the data and unzipped it in the data folder</p>
+<pre class="{bash}"><code># move in to the data folder
+cd glemin-wheat/data
+
+# download the data
+wget https://www.agap-ge2pop.org/wp-content/uploads/WheatRelativeHistory/download/Wheat_Relative_History_Data_Glemin_et_al.zip
+
+# unzip the data
+unzip Wheat_Relative_History_Data_Glemin_et_al.zip
+
+# now you should have the data in your data folder 
+# if you check git status these files should not be tracked</code></pre>
+</section>
+<section id="software-installation" class="level3">
+<h3 class="anchored" data-anchor-id="software-installation">Software Installation</h3>
+<p>I want to create one conda environment with as many tools as I can for this class.</p>
+<pre class="{bash}"><code># create a new conda environment called pp875
+conda create -n pp875
+
+# activate that environment
+# I know it's active because (base) becomes (pp875)
+conda activate pp875</code></pre>
+<section id="raxml-next-generation" class="level4">
+<h4 class="anchored" data-anchor-id="raxml-next-generation">RAxML Next Generation</h4>
+<pre class="{bash}"><code># install raxml
+conda install raxml-ng
+
+# make sure it worked
+raxml-ng
+
+# RAxML-NG v. 2.0.0 released on 11.03.2026 by The Exelixis Lab.
+# Developed by: Oleksiy M. Kozlov and Alexandros Stamatakis.
+# Contributors: Diego Darriba, Tomas Flouri, Benoit Morel, Sarah Lutteropp, Ben Bettisworth,
+#               Julia Haag, Anastasis Togkousidis, Julius Wiegert, Christoph Stelz.
+# Latest version: https://github.com/amkozlov/raxml-ng
+# Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!forum/raxml</code></pre>
+</section>
+<section id="supertriplets" class="level4">
+<h4 class="anchored" data-anchor-id="supertriplets">SuperTriplets</h4>
+<pre class="{bash}"><code># download the jar file in a software folder
+wget https://www.agap-ge2pop.org/wp-content/uploads/ge2pop/superTriplets/data/SuperTriplets_v1.1.jar</code></pre>
+</section>
+<section id="astral" class="level4">
+<h4 class="anchored" data-anchor-id="astral">ASTRAL</h4>
+<pre class="{bash}"><code># in pp875 conda env
+conda install aster</code></pre>
+</section>
+<section id="julia" class="level4">
+<h4 class="anchored" data-anchor-id="julia">Julia</h4>
+<pre class="{bash}"><code># in pp875 conda env
+curl -fsSL https://install.julialang.org | sh
+
+# close and reopen terminal
+juliaup add release
+
+# install packages
+import Pkg; Pkg.add("PhyloNetworks")
+import Pkg; Pkg.add("SNaQ")
+import Pkg; Pkg.add("PhyloPlots")
+import Pkg; Pkg.add("CSV")
+import Pkg; Pkg.add("DataFrames")</code></pre>
+</section>
+<section id="hyde" class="level4">
+<h4 class="anchored" data-anchor-id="hyde">HyDe</h4>
+<pre class="{bash}"><code># in your software direcotry
+git clone https://github.com/pblischak/HyDe.git
+cd HyDe
+python3 -m pip install -r requirements.txt
+python3 -m pip install .</code></pre>
+</section>
+<section id="r" class="level4">
+<h4 class="anchored" data-anchor-id="r">R</h4>
+<pre class="{bash}"><code># install the R conda environment in your pp875 env
+conda install -c conda-forge r-base
+conda install r-ape r-ggplot2 r-phangorn r-phytools
+mamba install -c conda-forge -c bioconda \
+  r-base&gt;=4.3 bioconductor-ggtree&gt;=3.10</code></pre>
+</section>
+<section id="mscquartets" class="level4">
+<h4 class="anchored" data-anchor-id="mscquartets">MSCquartets</h4>
+<pre class="{bash}"><code># activate conda environment
+conda activate pp875
+
+# start R
+R
+
+# install MSCquartets
+BiocManager::install("MSCquartets")
+
+# quit R
+q()</code></pre>
+</section>
+</section>
+</section>
+<section id="gene-tree-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="gene-tree-estimation">04 Gene Tree Estimation</h2>
+<p>The data started with 13,288 genes which were filtered down to the 8,739 we are using here. We are using raxml to estimate gene trees based on those 8,739 alignments. Before running the whole thing, I tested the command on just 10 genes to make sure it all works.</p>
+<pre class="{bash}"><code># this is in the data/Wheat_Relative_History_Data_Glemin_et_al directory
+
+# unzip IndividualAlignments_OneCopyGenes.zip
+unzip IndividualAlignments_OneCopyGenes.zip
+
+# make a subfolder for the smaller dataset
+mkdir OneCopyGenes-trimmed
+
+# move to OneCopyGenes
+cd OneCopyGenes
+
+# copy 10 genes to the trimmed folder
+ls | head -n10 | xargs -I {} cp "{}" ../OneCopyGenes-trimmed</code></pre>
+<p>The subfolder now contains the first 10 alignments</p>
+<pre class="{bash}"><code># move to the code folder to run the raxml script
+cd ../../code
+./04-raxml.sh</code></pre>
+<p>We can see the results for each gene in the results/RAxML folder. Running 10 genes in the terminal wasn’t bad, but to run the whole dataset we’ll want to break the dataset into several chunks and submit jobs.</p>
+<pre class="{bash}"><code># move into your data/Wheat_Relative_History_Data_Glemin_et_al folder
+
+num_dirs=20
+
+# Create destination directories
+for i in $(seq 1 $num_dirs); do
+    mkdir -p "OneCopyGenes_$i"
+done
+
+# Copy files evenly
+i=1
+for file in OneCopyGenes/*; do
+    cp "$file" "OneCopyGenes_$i/"
+    i=$(( (i % num_dirs) + 1 ))
+done</code></pre>
+<pre class="{bash}"><code># run the 20 jobs
+# docker container is raxml-ng version 2.0.0
+condor_submit 04-job-raxml.sub</code></pre>
+<p>The results ended up in 20 separate folders in the code folder, so we have to move these folders to the results/RAxML folder</p>
+<pre class="{bash}"><code>mv RAxML_results_* ../results
+cd ../results
+
+# move all results to the RAxML folder
+for folder in RAxML_results_*; do
+  mv $folder/* RAxML/
+done
+
+# remove empty folders
+rmdir RAxML_results*</code></pre>
+<section id="analyze-the-results" class="level3">
+<h3 class="anchored" data-anchor-id="analyze-the-results">Analyze the Results</h3>
+<p>TODO: add more comments to this script and save plots using ggsave. It takes a long time to run, so maybe make it a job?</p>
+<pre class="{bash}"><code>Rscript 04-geneTrees.R</code></pre>
+</section>
+</section>
+<section id="full-species-tree-supermatrix" class="level2">
+<h2 class="anchored" data-anchor-id="full-species-tree-supermatrix">05 Full Species Tree Supermatrix</h2>
+<pre class="{bash}"><code># in the data folder
+# unzip the concatenated fasta file
+unzip FullConcatenation_OneCopyGenes.zip
+
+# run raxml on the full concatenation
+condor_submit 05-job-species-tree.sub
+
+# once job is done running, move outputs to the results folder
+cd ../../results/RAxML/
+mkdir full-concatenation
+
+# move back into the code dir where the results are
+cd ../../code
+ls ## to check files are there
+
+# move the files to results/full-concatenation
+mv triticeae_allindividuals_OneCopyGenes.fasta.raxml.* ../results/RAxML/full-concatenation/</code></pre>
+<pre class="{bash}"><code># analyze results
+Rscript 05-species-tree.R</code></pre>
+</section>
+<section id="mb-species-tree-supermatrix" class="level2">
+<h2 class="anchored" data-anchor-id="mb-species-tree-supermatrix">06 10Mb Species Tree Supermatrix</h2>
+<pre class="{bash}"><code># in the data folder
+# unzip the folder
+unzip Concatenation10Mb_OneCopyGenes.zip
+
+# move into that folder
+cd Concatenation10Mb_OneCopyGenes
+
+# check how many files there are
+ls | wc -l # 248 files</code></pre>
+<p>We want to build one species tree per file. This would take about 10 hours if we run each individually, so we will break the files into 8 batches and run in parallel.</p>
+<pre class="{bash}"><code>num_dirs=8
+
+# Create destination directories
+for i in $(seq 1 $num_dirs); do
+    mkdir -p "Concatenation10Mb_subset_$i"
+done
+
+# Copy files evenly
+i=1
+for file in Concatenation10Mb_OneCopyGenes/*; do
+    cp "$file" "Concatenation10Mb_subset_$i/"
+    i=$(( (i % num_dirs) + 1 ))
+done</code></pre>
+<pre class="{bash}"><code>condor_submit 06-job-raxml-concatenation.sub</code></pre>
+<pre class="{bash}"><code># make results folder and move results
+# in results/RAxML
+mkdir 10Mb-concatenation
+cd ../../code
+
+mv concatenation_results_? ../results/RAxML/10Mb-concatenation/
+cd ../../results/RAxML/10Mb-concatenation
+ls # to make sure the folders are there
+
+for folder in concatenation_results_? 
+do
+  mv $folder/*raxml* .
+done</code></pre>
+<p>Analyze the results</p>
+<pre class="{bash}"><code>Rscript 06-concatenation.R</code></pre>
+</section>
+<section id="species-tree-supertreecoaslescent" class="level2">
+<h2 class="anchored" data-anchor-id="species-tree-supertreecoaslescent">07 Species Tree Supertree/Coaslescent</h2>
+<pre class="{bash}"><code># run this from the results directory
+# Supertree requires java, which works in my base conda env but not the pp875 env
+# run this with base conda env
+java -jar ~/software/SuperTriplets_v1.1.jar 04-all_gene_trees.tre 07-supertree.tre</code></pre>
+<p>Analyze the supertree results</p>
+<pre class="{bash}"><code># reactivate the pp875 conda environment to run this
+conda activate pp875
+
+Rscript 07-supertree.R</code></pre>
+<pre class="{bash}"><code># run this in the results folder
+astral4 -i 04-all_gene_trees.tre -o 07-individual-species-tree-astral4.tre -t 8</code></pre>
+<pre class="{bash}"><code>Rscript 07-astral.R</code></pre>
+<pre class="{bash}"><code># run this in the results folder
+astral4 -i 04-all_gene_trees.tre -a 07-species_mapping.txt -o 07-species-tree-astral4.tre -t 8</code></pre>
+</section>
+<section id="species-tree-visualizations" class="level2">
+<h2 class="anchored" data-anchor-id="species-tree-visualizations">08 Species Tree Visualizations</h2>
+<p>We now have 4 species trees in the results folder</p>
+<ul>
+<li><p>full concatenation (RAxML/full-concatenation/triticeae_allindividuals_OneCopyGenes.fasta.raxml.bestTree)</p></li>
+<li><p>consensus of 10Mb window concatenation trees (folder RAxML/10Mb-concatenation)</p></li>
+<li><p>supertree (07-supertree.tre)</p></li>
+<li><p>ASTRAL4 (07-individual-species-tree-astral4.tre)</p></li>
+</ul>
+</section>
+<section id="species-network" class="level2">
+<h2 class="anchored" data-anchor-id="species-network">09 Species Network</h2>
+<pre class="{bash}"><code># make sure the pp875 conda env is active
+# open julia
+julia
+
+# define which packages you will use
+using PhyloNetworks
+using SNaQ
+using CSV, DataFrames
+
+mappingfile = CSV.read("../results/07-species_mapping.txt", DataFrame; header=false, delim=' ')
+</code></pre>
+<pre class="{bash}"><code>rename!(mappingfile, :Column1 =&gt; :individual)
+rename!(mappingfile, :Column2 =&gt; :species)
+
+select!(mappingfile,[:species, :individual])
+
+## We want to remove 3 of the 4 outgroups to simplify the analysis:
+## We keep `H_vulgare_HVens23`, 
+## We remove `Ta_caputMedusae_TB2`, `Er_bonaepartis_TB1`, `S_vavilovii_Tr279`
+filter(row -&gt; row.species in ["Ta_caputMedusae", "Er_bonaepartis", "S_vavilovii"], mappingfile)
+size(mappingfile) ## (47,2)
+
+mappingfile = filter(row -&gt; !(row.species in ["Ta_caputMedusae", "Er_bonaepartis", "S_vavilovii"]), mappingfile)
+size(mappingfile) ## (44, 2)
+
+CSV.write("../results/09-species_mapping.csv", mappingfile)
+
+## mappingfile = CSV.read("../results/09-species_mapping.csv", DataFrame)
+taxonmap = Dict(r[:individual] =&gt; r[:species] for r in eachrow(mappingfile)) # as dictionary
+</code></pre>
+<pre class="{bash}"><code>trees = readmultinewick("../results/04-all_gene_trees.tre")
+length(trees) ## 8708
+
+
+for gt in trees
+  for badtip in ["Ta_caputMedusae_TB2", "Er_bonaepartis_TB1", "S_vavilovii_Tr279"]
+    if badtip in tiplabels(gt)
+      deleteleaf!(gt, badtip)
+    end
+  end
+end
+
+
+writemultinewick(trees, "../results/09-all_gene_trees_snaq.tre")
+
+## trees = readmultinewick("../results/09-all_gene_trees_snaq.tre")
+
+## creating CF table:
+df_sp = tablequartetCF(countquartetsintrees(trees, taxonmap; showprogressbar=false)...);
+keys(df_sp)  # columns names
+CSV.write("../results/09-tableCF_species.csv", df_sp); 
+
+# close julia
+exit()</code></pre>
+<pre class="{bash}"><code># 09-snaq.sub
+# HTC Submit File
+
+# Name the batch job
+batch_name = "snaq" 
+
+# Provide HTCondor with the name of the Docker container
+container_image = docker://julia:trixie
+universe = container
+
+executable = snaq.sh
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = /home/pratt7/pp875/glemin-wheat/results/09-tableCF_species.csv, /home/pratt7/pp875/glemin-wheat/results/07-species-tree-astral4.tre, snaq.jl
+transfer_output_files = 09-snaq-h1.log, 09-snaq-h1.networks, 09-snaq-h1.out, 09-snaq-h1_runs
+
+log = logs/job_snaq.log
+error = logs/job_snaq.err
+output = logs/job_snaq.out
+
+request_cpus = 8
+request_memory = 10GB
+request_disk = 20GB
+
+retry_request_memory_increase = RequestMemory * N
+retry_request_memory_max = 500GB
+
+queue</code></pre>
+<pre class="{bash}"><code># snaq.sh
+# !/bin/bash
+
+set -x
+
+julia snaq.jl
+
+ls -lh
+
+ls -lh 09-snaq-h1_runs</code></pre>
+<pre class="{bash}"><code># snaq.jl
+# you should really create a container that has the packages you need... but this way works too if you are being lazy like me
+
+# add the packages you need
+import Pkg; Pkg.add("PhyloNetworks")
+import Pkg; Pkg.add("SNaQ")
+
+# and now inside Julia
+using Distributed
+addprocs(4)
+
+@everywhere using PhyloNetworks
+@everywhere using SNaQ
+
+## read table of CF
+d_sp = readtableCF("09-tableCF_species.csv"); # "DataCF" object for use in snaq!
+#read in the species tree from ASTRAL as a starting point
+T_sp = readnewick("07-species-tree-astral4.tre")
+
+# starting tree
+# data w/ concordance factor
+# number of parallel searches
+# number of times to test neighbors
+# output file
+# seed stops
+net = snaq!(T_sp, d_sp, runs=100, Nfail=200, filename= "09-snaq-h1",seed=8485);</code></pre>
+<pre class="{bash}"><code># move results to the results folder
+mv run* ../results/snaq/09-snaq-h1_runs
+mv 09-snaq-h1* ../results/snaq/</code></pre>
+<pre class="{bash}"><code>## This is if you aren't running a job!
+# restart Julia with more threads
+julia -t 8
+
+# and now inside Julia
+using Distributed
+addprocs(4)
+
+@everywhere using PhyloNetworks
+@everywhere using SNaQ
+
+## read table of CF
+d_sp = readtableCF("../results/09-tableCF_species.csv"); # "DataCF" object for use in snaq!
+#read in the species tree from ASTRAL as a starting point
+T_sp = readnewick("../results/07-species-tree-astral4.tre")
+
+# create snaq folder in results before running this
+# make this into a submit file
+# starting tree
+# data w/ concordance factor
+# number of parallel searches
+# number of times to test neighbors
+# output file
+# seed stops
+net = snaq!(T_sp, d_sp, runs=100, Nfail=200, filename= "../results/snaq/09-snaq-h1",seed=8485);
+</code></pre>
+</section>
+<section id="hybrid-detection-with-hyde" class="level2">
+<h2 class="anchored" data-anchor-id="hybrid-detection-with-hyde">10 Hybrid Detection with HyDe</h2>
+<pre class="{bash}"><code># make sure you are in the glemin-wheat/code directory
+# make sure the pp875 conda environment is active
+# install biopython
+conda install -c conda-forge biopython</code></pre>
+<div id="82c17d44" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 10-fasta2phylip.py </span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> Bio <span class="im">import</span> AlignIO</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> Bio.AlignIO.PhylipIO <span class="im">import</span> SequentialPhylipWriter</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>data_path <span class="op">=</span> <span class="st">"../data/Wheat_Relative_History_Data_Glemin_et_al/"</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>concat_file <span class="op">=</span> <span class="st">"triticeae_allindividuals_OneCopyGenes.fasta"</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>fasta_file <span class="op">=</span> data_path<span class="op">+</span>concat_file</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>phylip_file <span class="op">=</span> <span class="st">"../results/10-triticeae_allindividuals_OneCopyGenes.phylip"</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the alignment</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(fasta_file, <span class="st">"r"</span>) <span class="im">as</span> f_in:</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>    alignment <span class="op">=</span> AlignIO.read(f_in, <span class="st">"fasta"</span>)</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the length of the longest sequence ID to prevent truncation</span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>max_id_len <span class="op">=</span> <span class="bu">max</span>(<span class="bu">len</span>(record.<span class="bu">id</span>) <span class="cf">for</span> record <span class="kw">in</span> alignment)</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Write out the alignment</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(phylip_file, <span class="st">"w"</span>) <span class="im">as</span> f_out:</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>    writer <span class="op">=</span> SequentialPhylipWriter(f_out)</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>    writer.write_alignment(alignment, id_width<span class="op">=</span>max_id_len <span class="op">+</span> <span class="dv">3</span>) <span class="co"># 3 additional padding</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="{bash}"><code># convert fasta to phylip with script above
+python 10-fasta2phylip.py </code></pre>
+<pre class="{bash}"><code># run HyDe on the full concatenation
+# this takes a bit, would be nice as a job
+# started at 9 am - done at 10:30 am
+run_hyde.py -i ../results/10-triticeae_allindividuals_OneCopyGenes.phylip -m ../results/07-species_mapping.txt -o H_vulgare -n 47 -t 17 -s 11354214 --prefix 10-hyde</code></pre>
+<pre class="{bash}"><code># move the results to the results folder
+mv 10-hyde-out-filtered.txt ../results
+mv 10-hyde-out.txt ../results</code></pre>
+<p>There are .sub and .sh files on GitHub (10-hyde.sub and hyde.sh) if you want to run this as a job instead of waiting 90 minutes for it to run in terminal</p>
+<section id="running-hyde-on-10mb-windows" class="level3">
+<h3 class="anchored" data-anchor-id="running-hyde-on-10mb-windows">Running HyDe on 10Mb windows</h3>
+<pre class="{bash}"><code># convert windows to the appropriate format
+# in the glemin-wheat/code folder
+python 10-fasta2phylip_10Mb_windows.py
+
+# change to the results folder
+cd ../results
+
+# make a new directory for the 10Mb window HyDe results
+mkdir 10concatenation10Mb_OneCopy-phylip-ch3
+
+# we're just going to run this analysis on chromosome 3 because the whole thing would be very time-cnsuming and this is all we need for figure 3b
+mv 10concatenation10Mb_OneCopy-phylip/*Chrom_3* 10concatenation10Mb_OneCopy-phylip-ch3
+
+# run the script below if you want to run in terminal instead of submitting a job
+# 10-hyde-10mb.sh</code></pre>
+<pre class="{bash}"><code># run on the CHTC (the scripts are on github)
+condor_submit 10-hyde-10Mb-windows.sub
+
+# move into the folder where the results were outputted
+cd HyDe/10Mb-concatenation-ch3
+
+# move the results to the results dir
+mv * ../../../results/HyDe/10Mb-concatenation-ch3/</code></pre>
+</section>
+</section>
+<section id="hybrid-detection-mscquartets" class="level2">
+<h2 class="anchored" data-anchor-id="hybrid-detection-mscquartets">11 Hybrid Detection MSCQuartets</h2>
+<section id="figures-3a-and-3b" class="level3">
+<h3 class="anchored" data-anchor-id="figures-3a-and-3b">Figures 3A and 3B</h3>
+<pre class="{bash}"><code># make sure to have a conda env with R active
+Rscript 11-figs3A-3B.R</code></pre>
+</section>
+<section id="mcquartets" class="level3">
+<h3 class="anchored" data-anchor-id="mcquartets">MCQuartets</h3>
+<pre class="{bash}"><code># run MSCquartets
+11-quartets.R</code></pre>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
